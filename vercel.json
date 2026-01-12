@@ -7,6 +7,13 @@
         }
     },
     "rewrites": [
-        {"source": "/(.*)","destination": "/api/lanbda.php"}
+        {
+            "source": "/(css|js|images|favicon.ico|build|assets)/(.*)",
+            "destination": "/public/$1/$2"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/api/lanbda.php"
+        }
     ]
 }
