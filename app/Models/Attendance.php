@@ -20,4 +20,13 @@ class Attendance extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function getDurationAttribute()
+    {
+        if (!$this->check_in || !$this->check_out) {
+            return null;
+        }
+
+        return \Carbon\Carbon::parse($this->check_in)
+            ->diffForHumans(\Carbon\Carbon::parse($this->check_out), true);
+    }
 }

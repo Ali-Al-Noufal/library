@@ -65,4 +65,12 @@ class AttendanceController extends Controller
                 }
         return back()->with('message','لا وجود لهذا المستخدم');
     }
+    public function destroy(Attendance $attendance)
+{
+
+    $attendance->delete();
+
+    return redirect()->back()
+        ->with('success', 'تم حذف سجل الحضور لهذا اليوم بنجاح');
+}
 }

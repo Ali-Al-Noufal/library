@@ -21,5 +21,7 @@ Route::post("/login",[AuthController::class,"login"]);
 Route::middleware(['role'])->group(function(){
 Route::get('/dashboard', [UserDashController::class, 'index'])->name('dashboard');
 Route::resource('employees', UserEmpController::class);
+Route::delete('/attendances/{attendance}', [AttendanceController::class, 'destroy'])
+         ->name('admin.attendances.destroy');
 Route::post("/logout",[AuthController::class,"logout"])->name('logout');
 });

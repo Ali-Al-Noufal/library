@@ -37,29 +37,48 @@
             @if($employee->attendances->isEmpty())
                 <p class="text-center text-muted py-4">لا توجد سجلات حضور بعد</p>
             @else
-                <div class="table-responsive">
-                    <table class="table table-hover table-sm">
-                        <thead>
-                            <tr>
-                                <th>التاريخ</th>
-                                <th>وقت الدخول</th>
-                                <th>وقت الخروج</th>
-                                
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($employee->attendances->take(10) as $att)
-                                <tr>
-                                    <td>{{ $att->date->format('Y/m/d') }}</td>
-                                    <td>{{ $att->check_in ? $att->check_in->format('H:i:s') : '-' }}</td>
-                                    <td>{{ $att->check_out ? $att->check_out->format('H:i:s') : '-' }}</td>
-                                    
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <small class="text-muted">يظهر آخر 10 تسجيلات فقط</small>
+<!-- داخل dashboard أو صفحة الموظف -->
+<div class="table-responsive">
+    <table class="table table-hover table-bordered table-sm">
+        <thead class="table-light">
+            <tr>
+                <th>التاريخ</th>
+                <th>وقت الدخول</th>
+                <th>وقت الخروج</th>
+                <th>المدة</th>
+                <th>إجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($employee->attendances->sortByDesc('date') as $attendance)
+                <tr>
+                    <td>{{ $attendance->date->format('Y-m-d') }}</td>
+                    <td>{{ $attendance->check_in ? $attendance->check_in->format('H:i') : 'غير مسجل' }}</td>
+                    <td>{{ $attendance->check_out ? $attendance->check_out->format('H:i') : 'غير مسجل' }}</td>
+                    <td>{{ $attendance->duration ?? 'غير مكتمل' }}</td>
+                    <td>
+                        <form action="{{ route('admin.attendances.destroy', $attendance) }}" method="POST" 
+                              class="d-inline" 
+                              onsubmit="return confirm('هل أنت متأكد من حذف سجل الحضور لهذا اليوم؟');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i> حذف
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                        لا يوجد سجلات حضور لهذا الموظف بعد
+                    </td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
+               
             @endif
         </div>
     </div>
